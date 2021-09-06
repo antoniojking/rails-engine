@@ -4,7 +4,7 @@ RSpec.describe 'Merchants API' do
   it 'sends a list of merchants' do
     create_list(:merchant, 5)
 
-    get "/api/v1/merchants/fetch"
+    get "/api/v1/merchants"
 
     expect(Merchant.count).to eq(5)
 
