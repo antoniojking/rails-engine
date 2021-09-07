@@ -21,4 +21,22 @@ RSpec.describe 'Merchants API' do
       expect(merchant[:attributes][:name]).to be_a(String)
     end
   end
+
+  it 'sends data for a single merchant' do
+    merchant1 = create(:merchant)
+
+    get "/api/v1/merchants/#{merchant1.id}"
+
+    expect(Merchant.count).to eq(1)
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+
+    expect(merchant[:data]).to have_key(:id)
+    expect(merchant[:data][:id]).to be_a(String)
+
+    expect(merchant[:data][:attributes]).to have_key(:name)
+    expect(merchant[:data][:attributes][:name]).to be_a(String)
+  end
 end
