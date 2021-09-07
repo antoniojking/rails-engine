@@ -40,7 +40,9 @@ group :development, :test do
   gem 'faker'
   gem 'factory_bot_rails'
   gem 'rubocop-rails'
-  # gem 'shoulda-matchers'
+  gem 'shoulda-matchers'
+  gem 'will_paginate'
+  gem 'fast_jsonapi'
 end
 
 group :development do
