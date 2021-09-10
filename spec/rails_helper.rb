@@ -31,7 +31,13 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 RSpec.configure do |config|
-   config.include FactoryBot::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
+
+  # config.before(:each) do
+  #   create_list(:merchant, 50)
+  #   create_list(:item, 50)
+  # end
+  
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

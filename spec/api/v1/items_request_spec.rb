@@ -6,7 +6,8 @@ RSpec.describe 'Items API' do
     create_list(:item, 50)
 
     get "/api/v1/items"
-
+    
+    expect(Merchant.count).to eq(5)
     expect(Item.count).to eq(50)
 
     items = JSON.parse(response.body, symbolize_names: true)
@@ -34,8 +35,9 @@ RSpec.describe 'Items API' do
   it 'does not have data for merchant'
 
   it 'sends a single item' do
+    # item1 = Item.create!(name: "This Thing", description: "aldjsflasjdfl.", unit_price: 10.99, merchant_id: 1)
     merchant = create(:merchant)
-    item1 = merchant.items.create(name: "This Thing", description: "aldjsflasjdfl.", unit_price: 10.99)
+    item1 = create(:item, merchant: merchant)
 
     get "/api/v1/items/#{item1.id}"
 
