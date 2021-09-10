@@ -70,18 +70,55 @@ RSpec.describe 'Merchants API' do
     expect(merchant[:data]).to eq([])
   end
 
-  it 'finds a single merchant by name, happy path' do
-    create_list(:merchant, 5)
-    merchant1 = Merchant.first
-    # get "/api/v1/merchants/find?name=#{merchant1.name.gsub(" ","+")}"
-    get "/api/v1/merchants/find?name=#{merchant1.name.split.first}"
+  describe 'finds a single merchant by name fragment api' do
+    it 'happy path: name fragment query' do
+      create_list(:merchant, 5)
+      merchant1 = Merchant.first
+      # get "/api/v1/merchants/find?name=#{merchant1.name.gsub(" ","+")}"
+      get "/api/v1/merchants/find?name=#{merchant1.name.split.first}"
 
-    merchant = JSON.parse(response.body, symbolize_names: true)
-    expect(response.status).to eq(200)
+      merchant = JSON.parse(response.body, symbolize_names: true)
+      expect(response.status).to eq(200)
 
-    expect(merchant[:data]).to be_a(Hash)
+      expect(merchant[:data]).to be_a(Hash)
 
-    expect(merchant[:data][:id]).to eq(merchant1.id.to_s)
-    expect(merchant[:data][:attributes][:name]).to eq(merchant1.name)
+      expect(merchant[:data][:id]).to eq(merchant1.id.to_s)
+      expect(merchant[:data][:attributes][:name]).to eq(merchant1.name)
+    end
+
+    it 'happy path: full name query' do
+      create_list(:merchant, 5)
+      merchant1 = Merchant.first
+
+      get "/api/v1/merchants/find?name=#{merchant1.name.gsub(" ","+")}"
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
+      expect(response.status).to eq(200)
+
+      expect(merchant[:data]).to be_a(Hash)
+
+      expect(merchant[:data][:id]).to eq(merchant1.id.to_s)
+      expect(merchant[:data][:attributes][:name]).to eq(merchant1.name)
+    end
+
+    it 'sad path: missing name query' do
+      get "/api/v1/merchants/find"
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
+      expect(response.status).to eq(200)
+
+      expect(merchant[:error]).to be_a(Hash)
+      expect(merchant[:error][:message]).to eq("invalid query")
+    end
+
+    it 'sad path: missing string to name query' do
+      get "/api/v1/merchants/find?name="
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
+      expect(response.status).to eq(200)
+
+      expect(merchant[:error]).to be_a(Hash)
+      expect(merchant[:error][:message]).to eq("invalid query")
+    end
   end
 end
